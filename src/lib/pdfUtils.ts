@@ -38,7 +38,7 @@ export async function splitPdf(
         newDoc.addPage(copiedPage);
         const pdfBytes = await newDoc.save();
         results.push({
-          blob: new Blob([new Uint8Array(pdfBytes.buffer)], { type: "application/pdf" }),
+          blob: new Blob([pdfBytes.slice()], { type: "application/pdf" }),
           name: `${baseName}_page_${pageNum}.pdf`,
         });
       }
@@ -53,7 +53,7 @@ export async function splitPdf(
     copiedPages.forEach((page) => newDoc.addPage(page));
     const pdfBytes = await newDoc.save();
     results.push({
-      blob: new Blob([new Uint8Array(pdfBytes.buffer)], { type: "application/pdf" }),
+      blob: new Blob([pdfBytes.slice()], { type: "application/pdf" }),
       name: `${baseName}_extracted.pdf`,
     });
   } else if (options.type === "every-n" && options.everyN) {
@@ -68,7 +68,7 @@ export async function splitPdf(
       const startPage = i + 1;
       const endPage = end;
       results.push({
-        blob: new Blob([new Uint8Array(pdfBytes.buffer)], { type: "application/pdf" }),
+        blob: new Blob([pdfBytes.slice()], { type: "application/pdf" }),
         name: `${baseName}_pages_${startPage}-${endPage}.pdf`,
       });
     }
