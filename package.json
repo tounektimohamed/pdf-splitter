@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "@pdfsmaller/pdf-encrypt-lite": "^1.2.0",
+    "docx": "^9.7.1",
     "next": "16.3.4",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.3.289",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tesseract.js": "^7.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
