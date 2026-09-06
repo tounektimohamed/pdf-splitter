@@ -5,7 +5,6 @@ import {
 } from "pdf-lib";
 import * as pdfjsLib from "pdfjs-dist";
 import type { PDFDocumentProxy } from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import {
   Document as DocxDocument,
   Packer,
@@ -34,7 +33,7 @@ let pdfjsReady = false;
 
 async function ensurePdfJs() {
   if (!pdfjsReady) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
     pdfjsReady = true;
   }
   return pdfjsLib;
