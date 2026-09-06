@@ -5,22 +5,26 @@ import { useCallback, useState, useRef } from "react";
 interface PdfUploaderProps {
   onFileSelected: (file: File) => void;
   isProcessing: boolean;
+  multiple?: boolean;
 }
 
 export default function PdfUploader({
   onFileSelected,
   isProcessing,
+  multiple = false,
 }: PdfUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = useCallback(
-    (file: File) => {
-      if (file.type === "application/pdf") {
-        onFileSelected(file);
-      } else {
-        alert("Veuillez sélectionner un fichier PDF.");
+  const handleFiles = useCallback(
+    (files: FileList | File[]) => {
+      const fileArray = Array.from(files);
+      const pdfFiles = fileArray.filter((f) => f.type === "application/pdf");
+      if (pdfFiles.length === 0) {
+        alert("Veuillez sélectionner au moins un fichier PDF.");
+        return;
       }
+      onFileSelected(pdfFiles[0]);
     },
     [onFileSelected]
   );
@@ -43,10 +47,10 @@ export default function PdfUploader({
       e.stopPropagation();
       setIsDragOver(false);
       if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        handleFile(e.dataTransfer.files[0]);
+        handleFiles(e.dataTransfer.files);
       }
     },
-    [handleFile]
+    [handleFiles]
   );
 
   const handleClick = () => {
@@ -55,7 +59,7 @@ export default function PdfUploader({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      handleFile(e.target.files[0]);
+      handleFiles(e.target.files);
     }
   };
 
@@ -74,6 +78,7 @@ export default function PdfUploader({
         ref={fileInputRef}
         type="file"
         accept=".pdf"
+        multiple={multiple}
         onChange={handleChange}
         className="hidden"
       />
@@ -103,20 +108,18 @@ export default function PdfUploader({
           <h3 className="text-xl font-semibold mb-2">
             {isDragOver
               ? "Déposez votre PDF ici"
-              : "Glissez-déposez votre PDF ici"}
+              : `Glissez-déposez ${
+                  multiple ? "vos PDF ici" : "votre PDF ici"
+                }`}
           </h3>
           <p className="text-muted text-sm">
-            ou cliquez pour sélectionner un fichier
+            ou cliquez pour sélectionner {multiple ? "des fichiers" : "un fichier"}
           </p>
         </div>
 
         <div className="flex items-center gap-3 text-xs text-muted">
-          <span className="px-2 py-1 bg-muted/10 rounded-lg">
-            PDF uniquement
-          </span>
-          <span className="px-2 py-1 bg-muted/10 rounded-lg">
-            Max 100 Mo
-          </span>
+          <span className="px-2 py-1 bg-muted/10 rounded-lg">PDF uniquement</span>
+          <span className="px-2 py-1 bg-muted/10 rounded-lg">Max 100 Mo</span>
         </div>
       </div>
     </div>
